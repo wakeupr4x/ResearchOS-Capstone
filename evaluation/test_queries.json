@@ -1,0 +1,26 @@
+[
+  {
+    "id": "eval-1",
+    "query": "How does Med-CorrectRAG reduce medical hallucinations?",
+    "expected_keywords": ["hallucinations", "biolinkbert", "critique", "38.4%"],
+    "expected_paper_keyword": "Clinical Question Answering"
+  },
+  {
+    "id": "eval-2",
+    "query": "What benchmark datasets were used to evaluate clinical QA?",
+    "expected_keywords": ["PubMedQA", "MedQA", "BioASQ"],
+    "expected_paper_keyword": "Clinical Question Answering"
+  },
+  {
+    "id": "eval-3",
+    "query": "What throughput and F1 score did small language models achieve with quantization?",
+    "expected_keywords": ["Phi-3-mini", "Llama-3-8B", "4-bit", "AWQ", "tokens/sec"],
+    "expected_paper_keyword": "Small Language Models"
+  },
+  {
+    "id": "eval-4",
+    "query": "How does knowledge graph augmented hybrid search improve multi-hop retrieval?",
+    "expected_keywords": ["Graph-HybridSearch", "reciprocal rank fusion", "RRF", "88.4%"],
+    "expected_paper_keyword": "Knowledge Graph"
+  }
+]

@@ -1,0 +1,57 @@
+import logging
+from typing import Optional
+from app.ai.base import LLMProvider
+from app.config.settings import settings
+
+logger = logging.getLogger(__name__)
+
+
+class GroqProvider(LLMProvider):
+    """
+    Ultra-fast LLM inference provider using Groq API.
+    Uses qwen/qwen3.8-27b by default.
+    """
+
+    def __init__(self, api_key: Optional[str] = None, model_name: Optional[str] = None):
+        self.api_key = api_key or settings.GROQ_API_KEY
+        self.model_name = model_name or settings.GROQ_MODEL
+        self.client = None
+
+        if self.api_key:
+            try:
+                import groq
+                self.client = groq.Groq(api_key=self.api_key)
+                logger.info(f"GroqProvider initialized successfully with model {self.model_name}")
+            except Exception as e:
+                logger.error(f"Failed to initialize Groq client: {e}")
+                self.client = None
+
+    def is_available(self) -> bool:
+        return self.client is not None
+
+    def generate(
+        self,
+        prompt: str,
+        system_instruction: Optional[str] = None,
+        temperature: float = 0.2,
+    ) -> str:
+        if not self.is_available():
+            raise RuntimeError("Groq API is not configured or unavailable.")
+
+        try:
+            messages = []
+            if system_instruction:
+                messages.append({"role": "system", "content": system_instruction})
+            messages.append({"role": "user", "content": prompt})
+
+            response = self.client.chat.completions.create(
+                model=self.model_name,
+                messages=messages,
+                temperature=temperature,
+                max_tokens=850,
+            )
+            content = response.choices[0].message.content or ""
+            return content.strip()
+        except Exception as e:
+            logger.error(f"Groq generation failed: {e}")
+            raise RuntimeError(f"Groq API Error: {str(e)}")
